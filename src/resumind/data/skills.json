@@ -1,0 +1,255 @@
+[
+    {
+        "canonical": "Python",
+        "aliases": ["python3", "python2", "py"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "Java",
+        "aliases": ["java8", "java11", "java17"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "C++",
+        "aliases": ["cpp", "c plus plus"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "C",
+        "aliases": [],
+        "category": "Programming Languages",
+        "ambiguous": true
+    },
+    {
+        "canonical": "C#",
+        "aliases": ["csharp", "c sharp"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "JavaScript",
+        "aliases": ["js", "javascripted", "es6"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "TypeScript",
+        "aliases": ["ts"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "Ruby",
+        "aliases": [],
+        "category": "Programming Languages",
+        "ambiguous": true
+    },
+    {
+        "canonical": "Go",
+        "aliases": ["golang"],
+        "category": "Programming Languages",
+        "ambiguous": true
+    },
+    {
+        "canonical": "Rust",
+        "aliases": [],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "R",
+        "aliases": [],
+        "category": "Programming Languages",
+        "ambiguous": true
+    },
+    {
+        "canonical": "Swift",
+        "aliases": [],
+        "category": "Programming Languages",
+        "ambiguous": true
+    },
+    {
+        "canonical": "SQL",
+        "aliases": [],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "NoSQL",
+        "aliases": [],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "MySQL",
+        "aliases": [],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "PostgreSQL",
+        "aliases": ["postgres"],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "MongoDB",
+        "aliases": ["mongo"],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "Redis",
+        "aliases": [],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "Pandas",
+        "aliases": [],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "NumPy",
+        "aliases": [],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "Machine Learning",
+        "aliases": ["ml"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "Deep Learning",
+        "aliases": ["dl"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "Natural Language Processing",
+        "aliases": ["nlp"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "Computer Vision",
+        "aliases": ["cv"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "Artificial Intelligence",
+        "aliases": ["ai"],
+        "category": "Machine Learning / AI",
+        "ambiguous": true
+    },
+    {
+        "canonical": "Reinforcement Learning",
+        "aliases": ["rl"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "scikit-learn",
+        "aliases": ["sklearn", "scikit learn"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "PyTorch",
+        "aliases": ["torch"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "TensorFlow",
+        "aliases": ["tf"],
+        "category": "Machine Learning / AI"
+    },
+    {
+        "canonical": "AWS",
+        "aliases": ["amazon web services"],
+        "category": "Cloud / Infrastructure"
+    },
+    {
+        "canonical": "GCP",
+        "aliases": ["google cloud", "google cloud platform"],
+        "category": "Cloud / Infrastructure"
+    },
+    {
+        "canonical": "Azure",
+        "aliases": ["microsoft azure"],
+        "category": "Cloud / Infrastructure"
+    },
+    {
+        "canonical": "Docker",
+        "aliases": [],
+        "category": "Cloud / Infrastructure"
+    },
+    {
+        "canonical": "Kubernetes",
+        "aliases": ["k8s"],
+        "category": "Cloud / Infrastructure"
+    },
+    {
+        "canonical": "Terraform",
+        "aliases": [],
+        "category": "Cloud / Infrastructure"
+    },
+    {
+        "canonical": "React",
+        "aliases": ["reactjs", "react.js"],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "Angular",
+        "aliases": ["angularjs", "angular.js"],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "Vue",
+        "aliases": ["vuejs", "vue.js"],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "Django",
+        "aliases": [],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "Flask",
+        "aliases": [],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "FastAPI",
+        "aliases": [],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "Spring Boot",
+        "aliases": ["springboot"],
+        "category": "Frameworks / Libraries"
+    },
+    {
+        "canonical": "Spring",
+        "aliases": [],
+        "category": "Frameworks / Libraries",
+        "ambiguous": true
+    },
+    {
+        "canonical": "Node.js",
+        "aliases": ["nodejs", "node js", "node"],
+        "category": "Frameworks / Libraries",
+        "ambiguous": true
+    },
+    {
+        "canonical": "Git",
+        "aliases": [],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "GitHub",
+        "aliases": ["github.com"],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "Linux",
+        "aliases": [],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "CMake",
+        "aliases": [],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "GitHub Actions",
+        "aliases": [],
+        "category": "Developer Tools"
+    }
+]

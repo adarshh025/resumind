@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumind | Intelligent Resume Analysis</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <h1>RESUMIND</h1>
+            <p>Intelligent Resume Analysis & Structured Extraction</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Upload Section -->
+        <section id="upload-section" class="card upload-card">
+            <div class="upload-zone" id="upload-zone">
+                <input type="file" id="file-input" accept=".pdf,.docx,.txt" hidden>
+                <div class="upload-content">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <h2>Upload a Resume</h2>
+                    <p>Supported formats: PDF, DOCX</p>
+                    <button class="btn primary-btn" onclick="document.getElementById('file-input').click()">Choose Resume</button>
+                    <p id="file-name-display" class="file-name"></p>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button id="analyze-btn" class="btn primary-btn block" disabled>Analyze Resume</button>
+            </div>
+            
+            <div id="error-message" class="error-banner hidden"></div>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loading-section" class="card hidden">
+            <div class="loading-spinner"></div>
+            <p>Analyzing resume...</p>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="hidden">
+            <div class="results-header">
+                <h2>Analysis Complete</h2>
+                <div class="result-actions">
+                    <button class="btn secondary-btn" id="view-json-btn">View JSON</button>
+                    <button class="btn secondary-btn" id="reset-btn">Analyze Another</button>
+                </div>
+            </div>
+
+            <div id="warnings-container" class="warnings-banner hidden"></div>
+
+            <div class="grid-layout">
+                <!-- Main Content (Left) -->
+                <div class="main-column">
+                    <div id="candidate-card" class="card profile-card hidden"></div>
+                    <div id="summary-card" class="card hidden"></div>
+                    <div id="experience-card" class="card hidden">
+                        <h3>Experience</h3>
+                        <div id="experience-list"></div>
+                    </div>
+                    <div id="education-card" class="card hidden">
+                        <h3>Education</h3>
+                        <div id="education-list"></div>
+                    </div>
+                    <div id="projects-card" class="card hidden">
+                        <h3>Projects</h3>
+                        <div id="projects-list"></div>
+                    </div>
+                </div>
+
+                <!-- Sidebar (Right) -->
+                <div class="sidebar-column">
+                    <div id="skills-card" class="card hidden">
+                        <h3>Skills</h3>
+                        <div id="skills-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JSON Modal -->
+            <div id="json-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Structured Data (JSON)</h3>
+                        <div>
+                            <button id="copy-json-btn" class="btn secondary-btn small">Copy</button>
+                            <button id="close-modal-btn" class="btn secondary-btn small">Close</button>
+                        </div>
+                    </div>
+                    <pre id="json-output"></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container">
+            <p>Resumind - Built by Adarsh Aher</p>
+            <a href="https://github.com/adarshh025/resumind" target="_blank">GitHub</a>
+        </div>
+    </footer>
+
+    <script src="/app.js"></script>
+</body>
+</html>
