@@ -1,4 +1,4 @@
-# Resumind: Phase 9 Evaluation Report
+# Resumind: System Evaluation Report
 
 **Date**: 2026-09-14
 
@@ -21,7 +21,7 @@ All testing was performed on completely synthetic, locally generated resumes (`t
   - API Routes and Error mapping.
 
 ## NLP Evaluation (Precision/Robustness)
-We evaluated the parser against a known structured synthetic string in `scripts/evaluate_nlp.py`:
+The parser was evaluated against a known structured synthetic string in `scripts/evaluate_nlp.py`:
 
 **1. Contact Extraction:**
 - **Emails:** Extracted successfully (`jane.doe.test@gmail.com`)
