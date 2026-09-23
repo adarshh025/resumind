@@ -1,51 +1,69 @@
-# Resumind Project Contract
+# Resumind: Project Contract
 
-This document is the permanent architectural contract of Resumind. All future phases MUST follow these principles.
+This document defines the permanent engineering contract and architectural principles of Resumind.
 
 ## 1. Project Identity
 - **Project Name**: Resumind
-- **Description**: Intelligent Resume Analysis & Structured Extraction Engine
-- **Developer**: Adarsh Aher (aheradarsh6@gmail.com, GitHub: https://github.com/adarshh025)
+- **Description**: Automated Resume Analyzer for Job Portals
+- **Author**: Adarsh Aher (Email: aheradarsh6@gmail.com, GitHub: https://github.com/adarshh025)
+- **Repository**: https://github.com/adarshh025/resumind
 - **License**: MIT License (Copyright © 2026 Adarsh Aher)
 
 ## 2. Requirements & Constraints
-- The project is based on the Persevex specification: "Automated Resume Analyzer for Job Portals".
-- **Mandatory Requirements**: PDF/DOCX ingestion, text cleaning, section segmentation, contact extraction, NER, skill extraction/normalization with a knowledge base, and structured nested JSON output.
-- **Non-Negotiable**: No fake AI features, no paid APIs, no required internet connectivity for the core engine. Prioritize correctness, maintainability, and clean code.
+- The project is implemented against the Persevex specification: *"Automated Resume Analyzer for Job Portals"*.
+- **Mandatory Deliverables**:
+  1. Core parsing library with `ResumeParser.parsefile(filepath)`.
+  2. Standalone evaluator CLI (`python parser.py <filepath>`).
+  3. Skill knowledge base (`skills.json`) with canonical names, categories, and aliases.
+  4. FastAPI REST wrapper (`POST /api/v1/resumes/parse`) and web interface.
+  5. 10–20 resume layout test suite with semantic validation.
+- **Architectural Rules**:
+  - Deterministic and local execution: Zero external network calls, zero cloud dependencies, zero paid APIs.
+  - Reproducibility: Clean installation on standard Python 3.11 environments.
+  - Privacy and Security: Zero retention of uploaded resumes; immediate temporary file cleanup; no secrets or personal resumes in repository.
+  - Technical Integrity: No fabricated performance claims, fake benchmarks, or unverified claims.
 
-## 3. Technology Decisions
-- **Language**: Python 3.11 (chosen for stability and precompiled wheel support for NLP/ML dependencies).
-- **Packaging**: PEP 621 compliant `pyproject.toml` (using `hatchling`).
-- **Core Dependencies**: `pdfminer.six` (PDF), `python-docx` (DOCX), `spacy` (NLP), `pydantic` (Data Validation/Serialization).
-- **Testing**: `pytest`.
+## 3. Technology Baseline
+- **Language**: Python 3.11
+- **Packaging**: Standard PEP 621 `pyproject.toml` (using `hatchling` build backend).
+- **Core Dependencies**:
+  - `spacy>=3.7.0` (Pretrained English NER `en_core_web_sm`)
+  - `pdfminer.six>=20231228` (PDF text and layout extraction)
+  - `python-docx>=1.1.0` (DOCX paragraph and table parsing)
+  - `pydantic>=2.7.0` (Data validation and JSON serialization)
+  - `fastapi>=0.110.0` (REST API)
+  - `uvicorn>=0.29.0` (ASGI server)
+  - `python-multipart>=0.0.9` (Multipart upload handling)
+- **Testing**: `pytest>=8.0.0`
 
-## 4. Architecture
-The core system MUST remain usable as an independent Python library.
-**Conceptual Pipeline**:
-Resume File -> Document Ingestion -> Raw Text -> Text Cleaning -> Section Segmentation -> Information Extraction -> Normalization -> Validation -> Structured Resume Object -> JSON Output
+## 4. Pipeline Architecture
+```
+Input File (.pdf / .docx)
+    │
+    ▼
+Ingestion Layer (PdfExtractor / DocxExtractor)
+    │
+    ▼
+Preprocessing Layer (ResumeCleaner: NFKC, whitespace, divider filtration)
+    │
+    ▼
+Segmentation Layer (Sectionizer: exact & inline heading detection, scoring)
+    │
+    ▼
+Information Extraction Layer
+    ├── ContactExtractor (Emails, Phones, URLs)
+    ├── SemanticEntityExtractor (Candidate, Org, Date, Location)
+    └── SkillExtractor (75 canonical skills, aliases, ambiguity guards)
+    │
+    ▼
+Assembly Layer (ResumeAssembler: role/org split, degree/inst split, Pydantic model)
+    │
+    ▼
+Structured JSON Output
+```
 
-## 5. Core Interfaces
-- **`src/resumind/parser.py`**: Must contain `class ResumeParser` with a `parsefile(filepath)` method.
-- **Canonical Data Model**: Defined using `pydantic` in `src/resumind/models/resume.py`.
-
-## 6. Security, Privacy & Testing
-- Do not transmit resume content externally.
-- Do not commit private/sample personal resumes.
-- System must be tested against 10–20 materially different real-world layouts.
-
-## 7. Implemented Capabilities
-- **Foundation and Architecture**: Modular pipeline orchestration.
-- **Document Ingestion & Text Extraction Engine**: Extractor interfaces (`DocumentExtractor`), robust error handling, and privacy-safe logging.
-- **Text Cleaning & Section Segmentation**: Non-destructive text cleaning (`cleaned_text`) and a deterministic hybrid heading detector.
-- **High-Precision Contact & Metadata Extraction**: Robust regex-based extraction for emails, phone numbers, and URLs with false-positive elimination.
-- **NLP Named Entity Recognition & Semantic Entity Layer**: Hybrid NER engine (`spaCy` + section heuristics) to extract `CANDIDATE`, `ORGANIZATION`, `DATE`, and `LOCATION` entities.
-- **Skill Ontology & Context-Aware Extraction**: JSON skill ontology supporting canonical forms and aliases.
-- **Unified Schema & Structured Resume Assembly**: `ResumeAssembler` integrates outputs into a single `ResumeData` Pydantic schema enforcing typing.
-- **FastAPI Backend & Web UI**: REST API (`/api/v1/resumes/parse`) using `FastAPI` enforcing a strict 5MB upload limit. Features a vanilla HTML/JS/CSS frontend.
-- **Testing, Benchmarking, and Hardening**: 100% passing test suite with zero failures. Extensive security testing (XSS escapes, path traversal blocks, oversized upload drops, strict temporary cleanup hooks).
-
-## 8. Execution Rules for Future Development
-Every future pull request or feature addition MUST:
-1. Adhere to this `PROJECT_CONTRACT.md`.
-2. Preserve existing functionality and pass all tests.
-3. Modify core architecture only when technically justified.
+## 5. Maintenance Guidelines
+Every contribution or modification MUST:
+1. Maintain 100% test pass rate on `pytest tests/`.
+2. Preserve existing public APIs (`ResumeParser.parsefile()`, `/api/v1/resumes/parse`).
+3. Maintain zero-cloud, privacy-preserving local execution.

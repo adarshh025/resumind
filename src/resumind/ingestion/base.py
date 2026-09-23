@@ -43,7 +43,7 @@ def validate_filepath(filepath: Path) -> None:
 
 def detect_file_format(filepath: Path) -> str:
     """
-    Detects the canonical file format based on extension (for Phase 2).
+    Detects the canonical file format based on extension.
     
     Args:
         filepath (Path): Path to the file.

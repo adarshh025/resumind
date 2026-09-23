@@ -30,3 +30,25 @@ def test_cleaner_preserves_blank_lines():
     raw = "Experience\n\nCompany A"
     cleaned = cleaner.clean(raw)
     assert cleaned == ["Experience", "", "Company A"]
+
+def test_cleaner_decorative_separators():
+    cleaner = ResumeCleaner()
+    raw = (
+        "John Doe\n"
+        "|---|---|\n"
+        "====================\n"
+        "---\n"
+        "---------------~----\n"
+        "+------------------+\n"
+        "> > Experience\n"
+        "Software Engineer"
+    )
+    cleaned = cleaner.clean(raw)
+    assert cleaned == ["John Doe", "Experience", "Software Engineer"]
+
+def test_cleaner_preserves_technical_tokens():
+    cleaner = ResumeCleaner()
+    raw = "C++\nC#\nNode.js\nCI/CD\nA/B Testing"
+    cleaned = cleaner.clean(raw)
+    assert cleaned == ["C++", "C#", "Node.js", "CI/CD", "A/B Testing"]
+

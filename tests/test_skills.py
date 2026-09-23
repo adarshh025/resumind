@@ -103,3 +103,22 @@ def test_deduplication():
     skills = extractor.extract(sections)
     python = next((s for s in skills if s.canonical_name == "Python"), None)
     assert len(python.mentions) == 1
+
+def test_extract_soft_skills():
+    extractor = SkillExtractor()
+    sections = [
+        _make_section("skills", [
+            "Project Management, Agile, Scrum, Team Leadership",
+            "Strong communication skills and problem-solving abilities."
+        ])
+    ]
+    skills = extractor.extract(sections)
+    names = {s.canonical_name for s in skills}
+    
+    assert "Project Management" in names
+    assert "Agile" in names
+    assert "Scrum" in names
+    assert "Leadership" in names
+    assert "Communication" in names
+    assert "Problem Solving" in names
+

@@ -79,3 +79,50 @@ Python, FastAPI, SQL
     
     skills = [s["canonical_name"] for s in resume["skills"]]
     assert "Python" in skills
+
+def test_upload_oversized_file(tmp_path):
+    test_file = tmp_path / "oversized.pdf"
+    # Create file slightly larger than 5 MB
+    test_file.write_bytes(b"A" * (5 * 1024 * 1024 + 1024))
+    
+    with open(test_file, "rb") as f:
+        response = client.post(
+            "/api/v1/resumes/parse",
+            files={"file": ("oversized.pdf", f, "application/pdf")}
+        )
+    
+    assert response.status_code == 413
+    assert response.json()["error"]["code"] == "FILE_TOO_LARGE"
+
+@patch("resumind.parser.get_extractor")
+def test_upload_valid_docx_file(mock_get_extractor, tmp_path):
+    test_file = tmp_path / "valid.docx"
+    content = "Jane Doe\nProject Manager\njane@example.com\n\nSKILLS\nAgile, Scrum"
+    test_file.write_bytes(content.encode("utf-8"))
+
+    mock_extractor = MagicMock()
+    mock_extractor.extract.return_value = DocumentExtractionResult(
+        filename="valid.docx",
+        source_format="docx",
+        status="SUCCESS",
+        raw_text=content,
+        metadata={},
+        warnings=[]
+    )
+    mock_get_extractor.return_value = mock_extractor
+
+    with open(test_file, "rb") as f:
+        response = client.post(
+            "/api/v1/resumes/parse",
+            files={"file": ("valid.docx", f, "application/vnd.openxmlformats-officedocument.wordprocessingml.document")}
+        )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert data["resume"]["candidate"]["name"] == "Jane Doe"
+    assert "Project Management" not in data["resume"]["skills"]  # title is manager
+    skills = [s["canonical_name"] for s in data["resume"]["skills"]]
+    assert "Agile" in skills
+    assert "Scrum" in skills
+

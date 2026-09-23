@@ -46,6 +46,20 @@ class Experience(BaseModel):
     skills: List[str] = Field(default_factory=list) # Canonical skill names
     evidence: Dict[str, str] = Field(default_factory=dict)
 
+    @property
+    def company_name(self) -> Optional[str]:
+        return self.organization
+
+    @property
+    def job_title(self) -> Optional[str]:
+        return self.role
+
+    @property
+    def dates(self) -> Optional[str]:
+        if self.start_date and self.end_date:
+            return f"{self.start_date} - {self.end_date}"
+        return self.start_date or self.end_date
+
 class Education(BaseModel):
     degree: Optional[str] = None
     institution: Optional[str] = None
@@ -54,6 +68,16 @@ class Education(BaseModel):
     end_date: Optional[str] = None
     grade: Optional[str] = None
     evidence: Dict[str, str] = Field(default_factory=dict)
+
+    @property
+    def university(self) -> Optional[str]:
+        return self.institution
+
+    @property
+    def dates(self) -> Optional[str]:
+        if self.start_date and self.end_date:
+            return f"{self.start_date} - {self.end_date}"
+        return self.start_date or self.end_date
 
 class Project(BaseModel):
     name: Optional[str] = None

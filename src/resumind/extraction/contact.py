@@ -83,35 +83,54 @@ class ContactExtractor:
         )
 
     def _is_valid_phone(self, raw: str) -> bool:
-        digits = re.sub(r"\D", "", raw)
+        clean_raw = raw.strip()
+        digits = re.sub(r"\D", "", clean_raw)
         
         # Phone must have between 9 and 15 digits
         if len(digits) < 9 or len(digits) > 15:
             return False
             
         # Reject year ranges e.g. 2021-2025, 01/2021 - 05/2025
-        if re.search(r"20\d{2}\s*[-to]+\s*20\d{2}", raw.strip().lower()):
+        if re.search(r"20\d{2}\s*[-to]+\s*20\d{2}", clean_raw.lower()):
             return False
             
-        # Reject dates like 12-05-2024
-        if re.match(r"^\d{2}[-/]\d{2}[-/]\d{4}$", raw.strip()):
+        # Reject dates like 12-05-2024 or 2024-05-12
+        if re.match(r"^\d{2,4}[-/]\d{2}[-/]\d{2,4}$", clean_raw):
             return False
             
         # Reject decimals or fractions that look like GPAs (e.g. 3.8 / 4.0 or just 3.84)
-        if " / " in raw or re.match(r"^\d{1,2}\.\d{1,2}$", raw.strip()):
+        if " / " in clean_raw or re.match(r"^\d{1,2}\.\d{1,2}$", clean_raw):
+            return False
+
+        # Reject 9-digit US ZIP codes formatted as 12345-6789
+        if re.match(r"^\d{5}-\d{4}$", clean_raw):
             return False
             
-        # Avoid things that are just repeated digits (like 0000000000)
-        if len(set(digits)) == 1:
+        # Avoid things that are just repeated digits (like 0000000000, 1111111111)
+        if len(set(digits)) <= 2 and len(digits) >= 10:
             return False
             
         return True
         
     def _normalize_phone(self, raw: str) -> str:
-        has_plus = raw.startswith("+")
-        digits = re.sub(r"\D", "", raw)
+        """
+        Normalizes phone numbers by stripping whitespace and punctuation:
+        - Preserves explicit international country codes (+...)
+        - Normalizes 11-digit numbers with leading country code 1 (e.g. 1-555-123-4567 -> +15551234567)
+        - Preserves national numbers without inventing ambiguous country codes.
+        """
+        clean = raw.strip()
+        has_plus = clean.startswith("+")
+        digits = re.sub(r"\D", "", clean)
+        
         if has_plus:
             return "+" + digits
+            
+        # Explicit 11-digit NANP with national prefix 1-xxx-xxx-xxxx
+        if len(digits) == 11 and digits.startswith("1") and ("-" in clean or "." in clean or " " in clean):
+            return "+" + digits
+            
+        # Return normalized digits without inventing ambiguous country codes
         return digits
 
     def _normalize_url(self, raw: str) -> str:

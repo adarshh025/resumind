@@ -1,6 +1,6 @@
-# Resumind: Testing Baseline (Phase 9)
+# Resumind: Testing Baseline & Verification
 
-**Date**: 2026-09-14
+**Date**: 2026-09-23
 
 ## Environment
 - **OS**: Windows (win32)
@@ -9,12 +9,12 @@
 
 ## Test Execution Summary
 - **Command**: `pytest`
-- **Total Tests Collected**: 48
-- **Passed**: 48
+- **Total Tests Collected**: 95
+- **Passed**: 95
 - **Failed**: 0
 - **Skipped**: 0
 - **Warnings**: 2 (Deprecation warnings from `starlette`/`fastapi` test client internals, non-critical)
-- **Duration**: ~14.85s
+- **Duration**: ~14s
 
 ## Supported Formats
 - **Ingestion**: PDF (`.pdf`), DOCX (`.docx`)

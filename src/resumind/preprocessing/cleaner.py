@@ -2,11 +2,13 @@ import re
 import unicodedata
 from typing import List
 
-BULLET_CHARS = {"•", "●", "▪", "◦", "○", "▸", "►", "–", "—", "*"}
+BULLET_CHARS = {"•", "●", "▪", "◦", "○", "▸", "►", "–", "—", "*", "■", "»"}
 
 class ResumeCleaner:
     """
     Non-destructive text cleaner for raw resume text.
+    Removes layout artifacts, page markers, and decorative lines while
+    conservatively preserving technical tokens (e.g., C++, C#, CI/CD).
     """
     
     def clean(self, raw_text: str) -> List[str]:
@@ -33,13 +35,22 @@ class ResumeCleaner:
             # 3. Whitespace normalization (collapse multiple spaces to one, strip ends)
             line = re.sub(r"[ \t]+", " ", line).strip()
             
-            # 4. Bullet normalization
+            # 4. Strip markdown quote prefixes (e.g. "> > Experience" -> "Experience")
+            if line.startswith(">"):
+                line = re.sub(r"^[>\s]+", "", line).strip()
+
+            # 5. Noise filtering: table borders and decorative separator lines
+            # E.g. "|---|---|", "====================", "---------------~----", "+------------------+"
+            if self._is_decorative_separator(line):
+                continue
+
+            # 6. Bullet normalization
             # If line starts with a known bullet character, canonicalize to "-"
             if line and line[0] in BULLET_CHARS:
                 # E.g., "• Software Engineer" -> "- Software Engineer"
                 line = "- " + line[1:].strip()
                 
-            # 5. Noise filtering (Page markers)
+            # 7. Noise filtering (Page markers)
             # e.g., "Page 1 of 2", "Page 2"
             if self._is_page_marker(line):
                 continue
@@ -48,6 +59,25 @@ class ResumeCleaner:
             cleaned_lines.append(line)
             
         return cleaned_lines
+
+    def _is_decorative_separator(self, line: str) -> bool:
+        """
+        Detects if a line is purely a decorative divider, Markdown table border,
+        or separator artifact without containing genuine textual content.
+        Preserves technical tokens like 'C++', 'C#', 'CI/CD', 'Node.js', 'A/B Testing'.
+        """
+        if not line:
+            return False
+            
+        # If line contains any alphanumeric character, preserve it
+        if re.search(r"[a-zA-Z0-9]", line):
+            return False
+            
+        # Match lines composed entirely of separator symbols (at least 3 characters)
+        if len(line) >= 3 and re.match(r"^[|\-=_~*+:\s#^`\.]{3,}$", line):
+            return True
+            
+        return False
         
     def _is_page_marker(self, line: str) -> bool:
         """Heuristic to detect if a line is just a page marker."""

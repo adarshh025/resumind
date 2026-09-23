@@ -85,44 +85,113 @@ class SemanticEntityExtractor:
                         
         return list(entity_registry.values())
         
+    JOB_TITLE_KEYWORDS = {
+        "engineer", "developer", "analyst", "architect", "designer", "consultant",
+        "manager", "director", "specialist", "administrator", "intern", "student",
+        "researcher", "scientist", "lead", "coordinator", "representative",
+        "executive", "officer", "founder", "freelancer", "associate", "assistant",
+        "curriculum vitae", "resume", "cv", "profile", "summary", "contact",
+        "experience", "education", "skills", "projects", "portfolio", "references",
+        "details", "information", "statement", "objective", "certifications"
+    }
+
+    def _extract_candidate_name_from_line(self, line: str) -> tuple[str, bool]:
+        """
+        Extracts a clean, plausible candidate name from a raw header line.
+        Handles pipe separators ('Name | email | phone'), comma title suffixes
+        ('Name, Cloud Architect'), and rejects decorative/table artifacts.
+        Returns (candidate_name, is_spacy_person) or (None, False).
+        """
+        if not line or not re.search(r"[a-zA-Z]", line):
+            return None, False
+
+        # Filter out decorative dividers and table borders
+        if len(line) >= 3 and re.match(r"^[|\-=_~*+:\s#^`\.]{3,}$", line):
+            return None, False
+
+        # Clean decorative bracket wrappers e.g. '[START PROFILE] >> NINA WILLIAMS <<'
+        cleaned = re.sub(r"\[.*?\]", "", line).strip()
+        cleaned = re.sub(r"^[|\s>~*#\-\+]+", "", cleaned).strip()
+        cleaned = re.sub(r"[|\s>~*#\-\+]+$", "", cleaned).strip()
+        if not cleaned:
+            return None, False
+
+        # Check for pipe-delimited contact blocks e.g. "David Chen | david@email.com | 415-555-1122"
+        if "|" in cleaned:
+            segments = [s.strip(" >><<[]()'\"") for s in re.split(r"\|+", cleaned) if s.strip(" >><<[]()'\"")]
+            for seg in segments:
+                cand, is_p = self._extract_candidate_name_from_line(seg)
+                if cand:
+                    return cand, is_p
+            return None, False
+
+        # Check for comma-separated title suffix e.g. "Priya Patel, Cloud Solutions Architect"
+        if "," in cleaned:
+            parts = [p.strip() for p in cleaned.split(",") if p.strip()]
+            if len(parts) >= 2:
+                lower_second = parts[1].lower()
+                if any(k in lower_second for k in ["engineer", "architect", "developer", "analyst", "manager", "lead", "director", "esq", "phd"]):
+                    cand, is_p = self._extract_candidate_name_from_line(parts[0])
+                    if cand:
+                        return cand, is_p
+
+        # Strip remaining enclosing bracket/quote noise
+        cand = re.sub(r"[><\[\]\(\)]", "", cleaned).strip()
+        
+        # Reject if line contains email, URL, or telephone indicators
+        if "@" in cand or "http" in cand or "www." in cand:
+            return None, False
+        if any(ch.isdigit() for ch in cand):
+            return None, False
+
+        tokens = cand.split()
+        if not (1 <= len(tokens) <= 4):
+            return None, False
+
+        lower_cand = cand.lower()
+        # Reject if the entire phrase is a job title keyword or heading
+        if any(k == lower_cand or lower_cand.startswith(k + " ") or lower_cand.endswith(" " + k) for k in self.JOB_TITLE_KEYWORDS):
+            return None, False
+
+        # Check that tokens look like valid human name components (allow initials and hyphens)
+        for tok in tokens:
+            if not re.match(r"^[A-Za-z][A-Za-z\.\'\-]*$", tok):
+                return None, False
+
+        # Validate with spaCy NER if available
+        is_person = False
+        if self.nlp:
+            doc = self.nlp(cand)
+            # If spaCy tags GPE/LOC, it is a location, not a person
+            if any(ent.label_ in ["GPE", "LOC"] for ent in doc.ents):
+                return None, False
+            for ent in doc.ents:
+                if ent.label_ == "PERSON":
+                    is_person = True
+                    break
+
+        return cand.title(), is_person
+
     def _detect_candidate(self, sections: List[SectionBlock], add_mention_fn):
         """
-        Attempts to detect the candidate name from the contact_header.
+        Attempts to detect the candidate name from the contact_header using deterministic heuristics and NER.
         """
+        candidates = []
+        
         for section in sections:
             if section.canonical_name == "contact_header":
-                for line in section.lines:
-                    text = line.strip()
-                    if not text:
-                        continue
-                        
-                    # Ignore lines with contact indicators
-                    if "@" in text or "http" in text or "www." in text:
-                        continue
-                        
-                    # Ignore lines with digits (phones, addresses)
-                    if any(char.isdigit() for char in text):
-                        continue
-                        
-                    # Token count 1 to 4 is reasonable for a name
-                    tokens = text.split()
-                    if 1 <= len(tokens) <= 4:
-                        # Ensure we don't accidentally pick up a job title
-                        # e.g., "Software Engineer"
-                        lower_text = text.lower()
-                        if any(title in lower_text for title in ["engineer", "developer", "manager", "student", "intern", "curriculum vitae", "resume"]):
-                            continue
+                for idx, line in enumerate(section.lines):
+                    name_candidate, is_person = self._extract_candidate_name_from_line(line)
+                    if name_candidate:
+                        # Score candidate: spaCy person bonus, position bonus
+                        score = 1.0 + (1.5 if is_person else 0.0) + (1.0 / (idx + 1))
+                        candidates.append((score, name_candidate, is_person))
 
-                        is_person = False
-                        if self.nlp:
-                            doc = self.nlp(text)
-                            for ent in doc.ents:
-                                if ent.label_ == "PERSON":
-                                    is_person = True
-                                    break
-                                    
-                        add_mention_fn(text, "CANDIDATE", "contact_header", "spacy" if is_person else "heuristic")
-                        return # Only take the very first plausible candidate
+        if candidates:
+            # Sort by score descending and take the best candidate
+            candidates.sort(key=lambda x: x[0], reverse=True)
+            best_score, best_name, is_person = candidates[0]
+            add_mention_fn(best_name, "CANDIDATE", "contact_header", "spacy" if is_person else "heuristic")
                         
     def _extract_dates_regex(self, line: str, section_name: str, add_mention_fn):
         """

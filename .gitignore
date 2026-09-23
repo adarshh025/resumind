@@ -68,3 +68,7 @@ venv.bak/
 sample_data/private/
 *.pdf
 *.docx
+!tests/fixtures/*.pdf
+!tests/fixtures/*.docx
+!tests/fixtures/generated_resumes/*.pdf
+

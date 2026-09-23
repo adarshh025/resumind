@@ -251,5 +251,136 @@
         "canonical": "GitHub Actions",
         "aliases": [],
         "category": "Developer Tools"
+    },
+    {
+        "canonical": "Project Management",
+        "aliases": ["project manager", "pmp", "agile project management", "technical project management"],
+        "category": "Management & Methodologies"
+    },
+    {
+        "canonical": "Agile",
+        "aliases": ["agile methodology", "agile methodologies", "agile development", "agile practices"],
+        "category": "Management & Methodologies"
+    },
+    {
+        "canonical": "Scrum",
+        "aliases": ["scrum methodology", "scrum master", "scrum framework", "sprint planning", "daily standups"],
+        "category": "Management & Methodologies"
+    },
+    {
+        "canonical": "Leadership",
+        "aliases": ["team leadership", "technical leadership", "engineering leadership", "strategic leadership"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Communication",
+        "aliases": ["communication skills", "written communication", "verbal communication", "interpersonal communication"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Teamwork",
+        "aliases": ["team player", "team collaboration", "cross-functional teamwork"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Collaboration",
+        "aliases": ["cross-functional collaboration", "collaborative problem solving", "teamwork and collaboration"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Problem Solving",
+        "aliases": ["problem-solving", "analytical problem solving", "troubleshooting skills", "complex problem solving"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Critical Thinking",
+        "aliases": ["critical-thinking", "analytical thinking", "critical analysis"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Time Management",
+        "aliases": ["task prioritization", "schedule management", "deadline management"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Adaptability",
+        "aliases": ["adaptive", "flexibility", "cross-domain adaptability"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Organizational Skills",
+        "aliases": ["organization skills", "work organization", "organizational abilities"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Creativity",
+        "aliases": ["creative thinking", "creative problem solving", "design thinking"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Conflict Resolution",
+        "aliases": ["conflict management", "dispute resolution", "mediation"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Decision Making",
+        "aliases": ["decision-making", "strategic decision making", "data-driven decision making"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Presentation Skills",
+        "aliases": ["presentation", "public speaking", "technical presentations", "presentation abilities"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Negotiation",
+        "aliases": ["negotiation skills", "contract negotiation", "stakeholder negotiation"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "Mentoring",
+        "aliases": ["mentorship", "peer mentoring", "technical coaching"],
+        "category": "Soft Skills"
+    },
+    {
+        "canonical": "HTML",
+        "aliases": ["html5"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "CSS",
+        "aliases": ["css3"],
+        "category": "Programming Languages"
+    },
+    {
+        "canonical": "Bash",
+        "aliases": ["shell", "shell scripting", "bash scripting", "zsh"],
+        "category": "Programming Languages",
+        "ambiguous": true
+    },
+    {
+        "canonical": "REST API",
+        "aliases": ["restful api", "restful apis", "rest apis"],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "GraphQL",
+        "aliases": ["graphql api"],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "CI/CD",
+        "aliases": ["continuous integration", "continuous deployment", "ci/cd pipelines", "ci cd"],
+        "category": "Developer Tools"
+    },
+    {
+        "canonical": "Kafka",
+        "aliases": ["apache kafka"],
+        "category": "Data / Database"
+    },
+    {
+        "canonical": "Jenkins",
+        "aliases": [],
+        "category": "Developer Tools"
     }
 ]
